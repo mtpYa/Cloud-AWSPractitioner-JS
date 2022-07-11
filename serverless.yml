@@ -1,6 +1,6 @@
 service: aws-mtp-game-shop
 
-frameworkVersion: '2'
+frameworkVersion: '3'
 
 provider:
   name: aws
@@ -12,15 +12,19 @@ provider:
 plugins:
   - serverless-finch
   - serverless-single-page-app-plugin
+  - serverless-s3-cleaner
 
 custom:
   client:
     bucketName: mtp-game-shop
-    distributionFolder: build
+    distributionFolder: dist
   s3BucketName: ${self:custom.client.bucketName}
 
   ## Serverless-single-page-app-plugin configuration:
   s3LocalPath: ${self:custom.client.distributionFolder}/
+  serverless-s3-cleaner:
+    buckets:
+      - ${self:custom.client.bucketName}
 
 resources:
   Resources:
@@ -111,7 +115,7 @@ resources:
             DefaultTTL: 0
           ## The certificate to use when viewers use HTTPS to request objects.
           ViewerCertificate:
-            CloudFrontDefaultCertificate: 'true'
+            CloudFrontDefaultCertificate: true
           ## Uncomment the following section in case you want to enable logging for CloudFront requests
           # Logging:
           #   IncludeCookies: 'false'
