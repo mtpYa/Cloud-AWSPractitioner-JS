@@ -15,8 +15,9 @@ export function useAvailableProducts() {
     "available-products",
     async () => {
       const res = await axios.get<HTTPResponse>(`${API_PATHS.bff}/products`);
+      const { data = [] } = res.data;
 
-      return res.data.data;
+      return data;
     }
   );
 }
@@ -33,10 +34,10 @@ export function useAvailableProduct(id?: string) {
   return useQuery<AvailableProduct, AxiosError>(
     ["product", { id }],
     async () => {
-      const res = await axios.get<AvailableProduct>(
+      const res = await axios.get<HTTPResponse>(
         `${API_PATHS.bff}/product/${id}`
       );
-      return res.data;
+      return res.data.data;
     },
     { enabled: !!id }
   );
